@@ -1,0 +1,17 @@
+---
+# Inspired by https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f
+
+- hosts: ubuntu1604
+  gather_facts: false
+
+  pre_tasks:
+    - name: Install Python 2.x for Ansible
+      raw: >
+        bash -c "test -e /usr/bin/python
+          || (apt -qqy update
+          && apt install -qqy python-minimal)"
+      register: install_python2
+      changed_when: install_python2.stdout
+
+    - name: Gather facts
+      setup:

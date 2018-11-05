@@ -1,0 +1,22 @@
+---
+# Inspired by muawiakh's comment https://gist.github.com/gwillem/4ba393dceb55e5ae276a87300f6b8e6f#gistcomment-1836513
+
+- hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - raw: >
+        which /usr/bin/python
+        || which /usr/bin/python3
+        || which python
+        || which python2
+        || which python3
+      register: python_interpreter
+      changed_when: false
+      failed_when: python_interpreter.stdout == ""
+
+    - set_fact:
+        ansible_python_interpreter: "{{ python_interpreter.stdout }}"
+
+    - name: Gather facts
+      setup:
